@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32422.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "StryxPack", "StryxPack\StryxPack.njsproj", "{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {909180A1-DF42-47C6-9247-D3DA6F609ACF}
+	EndGlobalSection
+EndGlobal

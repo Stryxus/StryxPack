@@ -1,24 +1,25 @@
 {
   "name": "arasaki",
   "version": "1.0.0",
-  "description": "The bundler for the Arasaki App",
-  "type": "module",
-  "main": "bundler.js",
+  "description": "The NodeJS based bundling app built for Stryxus' web based projects.",
+  "main": "bootstrapper.js",
   "scripts": {
-    "build": "node bundler.js build:debug",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "buildx": "node bundler.js build:debug",
     "build:debug": "node bundler.js build:debug",
     "build:release": "node bundler.js build:release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Arasaki-Inc/Arasaki-App.git"
+    "url": "git+https://github.com/Stryxus/StryxPack.git"
   },
   "author": "Connor 'Stryxus' Shearer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Arasaki-Inc/Arasaki-Appissues"
+    "url": "https://github.com/Stryxus/StryxPack/issues"
   },
-  "homepage": "https://github.com/Arasaki-Inc/Arasaki-Appe#readme",
+  "homepage": "https://github.com/Stryxus/StryxPack",
   "dependencies": {
     "@squoosh/lib": "^0.4.0",
     "await-exec": "github:hanford/await-exec",
@@ -27,10 +28,11 @@
     "ffmpeg-static": "^5.0.0",
     "get-folder-size": "^3.1.0",
     "p-limit": "^4.0.0",
-    "terser": "^5.12.1",
-    "ttf2woff2": "^4.0.4"
+    "terser": "^5.13.1",
+    "ttf2woff2": "^4.0.5"
   },
   "devDependencies": {
-    "typescript": "^4.6.3"
+    "@types/node": "^14.14.7",
+    "typescript": "^4.0.5"
   }
 }
