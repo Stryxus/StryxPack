@@ -30,10 +30,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="bootstrapper.ts" />
-    <Content Include="bundler.js" />
-    <Content Include="bundler_analysers.js" />
-    <Content Include="bundler_processors.js" />
-    <Content Include="bundler_utils.js" />
     <Content Include="package.json" />
     <Content Include="pubspec.yaml" />
     <Content Include="sass-minify.dart" />
