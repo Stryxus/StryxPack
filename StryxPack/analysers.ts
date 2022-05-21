@@ -1,17 +1,38 @@
 import { readFile } from 'fs/promises';
 import { extname, sep } from 'path';
 
-import { findFiles, isEmptyOrSpaces, isUpperCase, __client_dirname, __server_dirname, __special_characters_regex } from './bundler_utils.js';
+import { findFiles, isEmptyOrSpaces, isUpperCase, __client_dirname, __server_dirname, __special_characters_regex } from './utilities';
 
-export async function analyse_css(outputCss) 
+// TODO: This needs to be perfected over time.
+function checkIfSelectorIncluded(usedSelectors: Array<string>, line: string)
 {
-    var minified = '';
-    var usedSelectors = [];
+    return usedSelectors.some(x =>/* line.startsWith('.') || line.startsWith('#') ? 
+                                                                                          line.startsWith(`${x} `) || line.includes(` ${x} `)                                                              || line.endsWith(` ${x} {`)
+                                                                                       || line.startsWith(`${x},`) || (line.includes(`${x} `) && !line.includes(`-${x} `))                                 || line.startsWith(`${x} {`)
+                                                                                                                   || ((line.includes(` ${x}::`) || line.includes(`${x}::`)) && !line.includes(`-${x}::`))
+                                                                                                                   || ((line.includes(` ${x}:`) || line.includes(`${x}:`)) && !line.includes(`-${x}:`))
+                                                                                                                    
+                                                                                                                    :*/ line.startsWith(x) && !line.startsWith(`${x}-`));
+}
+
+function parseAttribute(line: string, attribute: string) 
+{
+    const parse = line.slice(line.indexOf(attribute) + attribute.length + 1);
+    return parse.substring(0, parse.indexOf('"'));
+}
+
+export async function analyseCSS(outputCss: string)
+{
+    let minified = '';
+    let onMultiSelectorConstruct = false;
+    const usedSelectors: Array<string> = [];
+    const minifiedLines: Array<string> = [];
+    const splitCSS: string[] = outputCss.replace('\r', '').split('\n');
     const files = (await findFiles(__client_dirname)).concat(await findFiles(__server_dirname));
-    await Promise.all(files.filter(x => extname(x.name) == '.razor' || extname(x.name) == '.html' || extname(x.name) == '.cshtml').map(async item => 
+    await Promise.all(files.filter(x => extname(x.name) === '.razor' || extname(x.name) === '.html' || extname(x.name) === '.cshtml').map(async item => 
     {
-        if (item.name == '_Imports.razor' || item.path.includes(`${sep}bin${sep}`) || 
-            item.path.includes(`${sep}obj${sep}`) || item.path.includes(`${sep}node_modules${sep}`) || 
+        if (item.name === '_Imports.razor' || item.path.includes(`${sep}bin${sep}`) ||
+            item.path.includes(`${sep}obj${sep}`) || item.path.includes(`${sep}node_modules${sep}`) ||
             item.path.includes(`${sep}wwwroot-dev${sep}`)) return;
         const fileLines = (await readFile(item.path, 'utf-8').then(data => data).catch(err => { throw err; })).split(/\r?\n/);
         if (fileLines)
@@ -21,7 +42,7 @@ export async function analyse_css(outputCss)
                 const line = l.trim();
                 if (line.startsWith('@using') || line.startsWith('@inject') || line.startsWith('@code')) return;
                 else if (line.startsWith('<') && line.endsWith('>') && !line.startsWith('</') && !line.startsWith('<!DOCTYPE') && !line.startsWith('<head') && !line.startsWith('<base')
-                            && !line.startsWith('<meta') && !line.startsWith('<link') && !line.startsWith('<script') && !line.startsWith('<!--') && !isUpperCase(line.slice(1, 2))) 
+                    && !line.startsWith('<meta') && !line.startsWith('<link') && !line.startsWith('<script') && !line.startsWith('<!--') && !isUpperCase(line.slice(1, 2))) 
                 {
                     if (line.includes('id=')) 
                     {
@@ -29,10 +50,10 @@ export async function analyse_css(outputCss)
                         if (!usedSelectors.includes(`#${id}`)) usedSelectors.push(`#${id}`);
                     }
                     if (line.includes('class=')) parseAttribute(line, 'class=').split(' ').forEach(selector =>
-                    { 
+                    {
                         if (!usedSelectors.includes(`.${selector}`) && !isEmptyOrSpaces(selector) && !__special_characters_regex.test(selector)) usedSelectors.push(`.${selector}`);
                     });
-                    var pushable = '';
+                    let pushable: string;
                     if (line.includes('<') && line.includes('</'))
                     {
                         const sliced = line.slice(1, line.indexOf('>'));
@@ -45,14 +66,10 @@ export async function analyse_css(outputCss)
             });
         }
     }));
-    
-    var minified = '';
-    var minifiedLines = [];
-    var onMultiSelectorConstruct = false;
-    var splitCSS = outputCss.replace('\r', '').split('\n');
+
     for (let x = 0; x < splitCSS.length; x++) 
     {
-        var line = splitCSS[x].trim();
+        let line: string = splitCSS[x].trim();
         if (line.startsWith('@charset') || line.startsWith('@import') || line.startsWith('@namespace')) minifiedLines.push(line);
         if (line.endsWith(','))
         {
@@ -118,7 +135,7 @@ export async function analyse_css(outputCss)
                 {
                     onMultiSelectorConstruct = false;
                     line = splitCSS[y].trim();
-                    if (line != minifiedLines[minifiedLines.length - 1]) minifiedLines.push(line);
+                    if (line !== minifiedLines[minifiedLines.length - 1]) minifiedLines.push(line);
                     if (line.startsWith('}'))
                     {
                         x = y;
@@ -140,21 +157,6 @@ export async function analyse_css(outputCss)
             }
         }
     }
-
-    // TODO: This needs to be perfected over time.
-    function checkIfSelectorIncluded(usedSelectors, line) {return usedSelectors.some(x =>/* line.startsWith('.') || line.startsWith('#') ? 
-                                                                                          line.startsWith(`${x} `) || line.includes(` ${x} `)                                                              || line.endsWith(` ${x} {`)
-                                                                                       || line.startsWith(`${x},`) || (line.includes(`${x} `) && !line.includes(`-${x} `))                                 || line.startsWith(`${x} {`)
-                                                                                                                   || ((line.includes(` ${x}::`) || line.includes(`${x}::`)) && !line.includes(`-${x}::`))
-                                                                                                                   || ((line.includes(` ${x}:`) || line.includes(`${x}:`)) && !line.includes(`-${x}:`))
-                                                                                                                    
-                                                                                                                    :*/ line.startsWith(x) && !line.startsWith(`${x}-`));}
-    function parseAttribute(line, attribute) 
-    {
-        const parse = line.slice(line.indexOf(attribute) + attribute.length + 1);
-        return parse.substring(0, parse.indexOf('"'));
-    }
-
     minifiedLines.forEach(line => minified += `${line.replace(': ', ':')}`);
     return minified;
 }

@@ -1,14 +1,21 @@
-var settingsManifest =
+import { AssetCacheManifest, SettingsManifest } from "./utilities";
+
+export const settingsManifest: SettingsManifest =
+{
+    version: 0
+};
+
+export let cachedManifest: AssetCacheManifest =
 {
     manifest: []
 };
 
-var cachedManifest =
+export const pwaManifest: AssetCacheManifest =
 {
     manifest: []
 };
 
-var pwaManifest =
+export function setCachedManifest(manifest: AssetCacheManifest)
 {
-    manifest: []
-};
+    cachedManifest = manifest;
+}

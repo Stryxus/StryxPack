@@ -21,18 +21,23 @@
   },
   "homepage": "https://github.com/Stryxus/StryxPack",
   "dependencies": {
-    "@squoosh/lib": "^0.4.0",
-    "await-exec": "github:hanford/await-exec",
     "chokidar": "^3.5.3",
     "command-exists": "^1.2.9",
     "ffmpeg-static": "^5.0.0",
     "get-folder-size": "^3.1.0",
     "p-limit": "^4.0.0",
+    "sharp": "^0.30.4",
     "terser": "^5.13.1",
     "ttf2woff2": "^4.0.5"
   },
   "devDependencies": {
+    "@types/command-exists": "^1.2.0",
+    "@types/ffmpeg-static": "^3.0.1",
+    "@types/get-folder-size": "^3.0.1",
     "@types/node": "^14.14.7",
+    "@types/sharp": "^0.30.2",
+    "@types/ttf2woff2": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
     "typescript": "^4.0.5"
   }
 }
