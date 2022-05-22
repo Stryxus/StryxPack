@@ -131,7 +131,7 @@ export async function transcodePNGToAVIF(itempath: string)
             const output: string = itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname).replace('.png', '.avif');
             console.log(`  | Transcoding Image:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
             const avif = await sharp(await readFile(itempath))
-                .avif({ quality: 70, effort: 9 })
+                .avif({ quality: __is_Debug ? 90 : 65, effort: __is_Debug ? 2 : 9 })
                 .toBuffer();
             await mkdir(dirname(output), { recursive: true });
             if (await fileExists(itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname))) await unlink(itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname));
