@@ -33,7 +33,6 @@
     <Content Include="package.json" />
     <Content Include="pubspec.yaml" />
     <Content Include="sass-minify.dart" />
-    <Content Include="setup.cmd" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
