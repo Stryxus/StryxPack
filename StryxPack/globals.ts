@@ -8,7 +8,7 @@ export const __project_name = 'StryxPack';
 export const __project_introduction = __project_name + ' By Connor \'Stryxus\' Shearer.\n';
 
 // Directories
-export const __project_dirname = join(__dirname, '../');
+export const __project_dirname = join(__dirname, '../', '../');
 export let __client_dirname: string;
 export let __server_dirname: string;
 
