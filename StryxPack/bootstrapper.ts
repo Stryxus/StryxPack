@@ -4,6 +4,9 @@ import process from 'process';
 
 import chokidar from 'chokidar';
 import getFolderSize from 'get-folder-size';
+// Appease the Typescript compiler
+let gFS: any = getFolderSize;
+//
 
 import { convertTTFtoWOFF2, minifySass, minifyTypescript, resetCompilationVariables, runSimpleCopy, transcodeH264ToAV1, transcodePNGToAVIF } from './processors.js';
 import { fileExists, FileInfo, filterFiles, findFiles } from './utilities.js';
@@ -49,8 +52,8 @@ async function processing()
     if (await fileExists(__cache_filename)) await truncate(__cache_filename, 0).catch(err => console.error(err));
     await writeFile(__cache_filename, JSON.stringify(cachedManifest, null, '\t')).catch(err => console.error(err));
 
-    const inputSize = await getFolderSize.loose(__client_wwwrootdev_dirname);
-    const outputSize = await getFolderSize.loose(__client_wwwroot_dirname);
+    const inputSize: number = await gFS.loose(__client_wwwrootdev_dirname);
+    const outputSize: number = await gFS.loose(__client_wwwroot_dirname);
 
     console.log('| > Size Before: ' + inputSize.toLocaleString('en') + ' bytes');
     console.log('| > Size After:  ' + outputSize.toLocaleString('en') + ' bytes');
