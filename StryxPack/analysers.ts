@@ -1,7 +1,8 @@
 import { readFile } from 'fs/promises';
 import { extname, sep } from 'path';
 
-import { findFiles, isEmptyOrSpaces, isUpperCase, __client_dirname, __server_dirname, __special_characters_regex } from './utilities';
+import { __client_dirname, __server_dirname, __special_characters_regex } from './globals';
+import { findFiles, isEmptyOrSpaces, isUpperCase } from './utilities';
 
 // TODO: This needs to be perfected over time.
 function checkIfSelectorIncluded(usedSelectors: Array<string>, line: string)

@@ -6,11 +6,11 @@ import chokidar from 'chokidar';
 import getFolderSize from 'get-folder-size';
 
 import { convertTTFtoWOFF2, minifySass, minifyTypescript, resetCompilationVariables, runSimpleCopy, transcodeH264ToAV1, transcodePNGToAVIF } from './processors';
-import { fileExists, FileInfo, filterFiles, findFiles, __client_wwwrootdev_dirname, __client_wwwroot_dirname, __project_dirname } from './utilities';
-import { limit, setDebugMode, setHasUpdateQueued, __cache_filename, __has_Update_Queued, __is_Debug, __project_introduction, __project_name } from './globals';
+import { fileExists, FileInfo, filterFiles, findFiles } from './utilities';
+import { limit, setDebugMode, setHasUpdateQueued, __cache_filename, __client_wwwrootdev_dirname, __client_wwwroot_dirname, __has_Update_Queued, __is_Debug, __project_dirname, __project_introduction, __project_name } from './globals';
 import { cachedManifest, setCachedManifest } from './manifests';
 
-async function processing(__client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string)
+async function processing()
 {
     console.log('\\   Running Bundle Pass...');
     console.log(' \\');
@@ -31,17 +31,17 @@ async function processing(__client_wwwroot_dirname: string, __client_wwwrootdev_
     const mp4Files = filterFiles(files, 'mp4');
     if (cachedManifest.manifest.length > 0) cachedManifest.manifest = [];
 
-    await Promise.all(tsFiles.map(item => limit(async () => await minifyTypescript(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname, true))));
-    await Promise.all(swtsFiles.map(item => limit(async () => await minifyTypescript(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname, false))));
-    await Promise.all(sassFile.map(item => limit(async () => await minifySass(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname))));
-    await Promise.all(htmlFiles.map(item => limit(async () => await runSimpleCopy(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname, 'html'))));
-    await Promise.all(svgFiles.map(item => limit(async () => await runSimpleCopy(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname, 'svg'))));
-    await Promise.all(jsonFiles.map(item => limit(async () => await runSimpleCopy(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname, 'json'))));
-    await Promise.all(woff2Files.map(item => limit(async () => await runSimpleCopy(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname, 'woff2'))));
-    await Promise.all(ttfFiles.map(item => limit(async () => await convertTTFtoWOFF2(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname))));
-    await Promise.all(pngFiles.map(item => limit(async () => await transcodePNGToAVIF(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname))));
-    await Promise.all(pwapngFiles.map(item => limit(async () => await runSimpleCopy(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname, 'png'))));
-    await Promise.all(mp4Files.map(item => limit(async () => await transcodeH264ToAV1(item.path, __client_wwwroot_dirname, __client_wwwrootdev_dirname))));
+    await Promise.all(tsFiles.map(item => limit(async () => await minifyTypescript(item.path, true))));
+    await Promise.all(swtsFiles.map(item => limit(async () => await minifyTypescript(item.path, false))));
+    await Promise.all(sassFile.map(item => limit(async () => await minifySass(item.path))));
+    await Promise.all(htmlFiles.map(item => limit(async () => await runSimpleCopy(item.path, 'html'))));
+    await Promise.all(svgFiles.map(item => limit(async () => await runSimpleCopy(item.path, 'svg'))));
+    await Promise.all(jsonFiles.map(item => limit(async () => await runSimpleCopy(item.path, 'json'))));
+    await Promise.all(woff2Files.map(item => limit(async () => await runSimpleCopy(item.path, 'woff2'))));
+    await Promise.all(ttfFiles.map(item => limit(async () => await convertTTFtoWOFF2(item.path))));
+    await Promise.all(pngFiles.map(item => limit(async () => await transcodePNGToAVIF(item.path))));
+    await Promise.all(pwapngFiles.map(item => limit(async () => await runSimpleCopy(item.path, 'png'))));
+    await Promise.all(mp4Files.map(item => limit(async () => await transcodeH264ToAV1(item.path))));
 
     if (!__has_Update_Queued) console.log('  | No files have changed!');
     console.log(' /');
@@ -78,7 +78,7 @@ async function processing(__client_wwwroot_dirname: string, __client_wwwrootdev_
 
     process.stdout.write(String.fromCharCode(27) + `]0;${__project_name} Bundler` + String.fromCharCode(7));
 
-    await processing(__client_wwwroot_dirname, __client_wwwrootdev_dirname);
+    await processing();
     //await createManifest(__client_wwwroot_dirname);
 
     if (__is_Debug)
@@ -91,7 +91,7 @@ async function processing(__client_wwwroot_dirname: string, __client_wwwrootdev_
             {
                 console.clear();
                 console.log(__project_introduction);
-                await processing(__client_wwwroot_dirname, __client_wwwrootdev_dirname);
+                await processing();
                 //await createManifest(__client_wwwroot_dirname);
             }
         });

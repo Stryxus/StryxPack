@@ -1,20 +1,9 @@
-import { constants, Dirent } from 'fs';
+import { constants } from 'fs';
 import { access, readdir } from 'fs/promises';
 import { join, resolve, sep } from 'path';
 import cp, { ExecException } from 'child_process';
 
 export const __dirname = resolve();
-
-// Directories
-export const __project_dirname = join(__dirname, '../');
-export const __server_dirname = join(__project_dirname, 'UEFI');
-export const __client_dirname = join(__project_dirname, 'OS');
-
-export const __client_wwwroot_dirname = join(__client_dirname, 'wwwroot');
-export const __client_wwwrootdev_dirname = join(__client_dirname, 'wwwroot-dev');
-
-// Special Strings
-export const __special_characters_regex = /[ `!@#$%^&*()_+=[\]{};':"\\|,.<>/?~]/;
 
 // Object Literal Interfaces
 export interface FileInfo { path: string; name: string }

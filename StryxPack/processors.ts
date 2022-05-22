@@ -7,7 +7,7 @@ import ffmpeg from 'ffmpeg-static';
 import commandExists from 'command-exists';
 import ttf2woff2 from 'ttf2woff2';
 
-import { __is_Debug } from './globals';
+import { __client_wwwrootdev_dirname, __client_wwwroot_dirname, __is_Debug } from './globals';
 import { exec, fileExists } from './utilities';
 import { analyseCSS } from './analysers';
 import { testCache } from './caching';
@@ -21,7 +21,7 @@ export function resetCompilationVariables()
     hasTSBundleCompiled = false;
 }
 
-export async function runSimpleCopy(itempath: string, __client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string, identifier: string)
+export async function runSimpleCopy(itempath: string, identifier: string)
 {
     if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, identifier))
     {
@@ -41,7 +41,7 @@ export async function runSimpleCopy(itempath: string, __client_wwwroot_dirname: 
     }
 }
 
-export async function minifyTypescript(itempath: string, __client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string, bundle: boolean)
+export async function minifyTypescript(itempath: string, bundle: boolean)
 {
     if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'min.js') && (!hasTSBundleCompiled || !bundle))
     {
@@ -71,7 +71,7 @@ export async function minifyTypescript(itempath: string, __client_wwwroot_dirnam
     }
 }
 
-export async function minifySass(itempath: string, __client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string)
+export async function minifySass(itempath: string)
 {
     if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'min.css') && !hasSASSBundleCompiled)
     {
@@ -102,7 +102,7 @@ export async function minifySass(itempath: string, __client_wwwroot_dirname: str
     }
 }
 
-export async function convertTTFtoWOFF2(itempath: string, __client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string)
+export async function convertTTFtoWOFF2(itempath: string)
 {
     if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'woff2'))
     {
@@ -122,7 +122,7 @@ export async function convertTTFtoWOFF2(itempath: string, __client_wwwroot_dirna
     }
 }
 
-export async function transcodePNGToAVIF(itempath: string, __client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string)
+export async function transcodePNGToAVIF(itempath: string)
 {
     if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'avif'))
     {
@@ -146,7 +146,7 @@ export async function transcodePNGToAVIF(itempath: string, __client_wwwroot_dirn
     }
 }
 
-export async function transcodeH264ToAV1(itempath: string, __client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string)
+export async function transcodeH264ToAV1(itempath: string)
 {
     if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'mp4'))
     {

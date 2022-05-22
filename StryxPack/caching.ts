@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { stat } from 'fs/promises';
 
-import { fileExists, __client_dirname, __dirname, __project_dirname } from './utilities';
+import { fileExists, __dirname } from './utilities';
 import { cachedManifest } from './manifests';
 import { setHasUpdateQueued } from './globals';
 
