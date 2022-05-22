@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The NodeJS based bundling app built for Stryxus' web based projects.",
   "main": "bootstrapper.js",
+  "type": "module",
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
