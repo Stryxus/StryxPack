@@ -5,10 +5,10 @@ import process from 'process';
 import chokidar from 'chokidar';
 import getFolderSize from 'get-folder-size';
 
-import { convertTTFtoWOFF2, minifySass, minifyTypescript, resetCompilationVariables, runSimpleCopy, transcodeH264ToAV1, transcodePNGToAVIF } from './processors';
-import { fileExists, FileInfo, filterFiles, findFiles } from './utilities';
-import { limit, setDebugMode, setHasUpdateQueued, __cache_filename, __client_wwwrootdev_dirname, __client_wwwroot_dirname, __has_Update_Queued, __is_Debug, __project_dirname, __project_introduction, __project_name } from './globals';
-import { cachedManifest, setCachedManifest } from './manifests';
+import { convertTTFtoWOFF2, minifySass, minifyTypescript, resetCompilationVariables, runSimpleCopy, transcodeH264ToAV1, transcodePNGToAVIF } from './processors.js';
+import { fileExists, FileInfo, filterFiles, findFiles } from './utilities.js';
+import { limit, setDebugMode, setHasUpdateQueued, __cache_filename, __client_wwwrootdev_dirname, __client_wwwroot_dirname, __has_Update_Queued, __is_Debug, __project_dirname, __project_introduction, __project_name } from './globals.js';
+import { cachedManifest, setCachedManifest } from './manifests.js';
 
 async function processing()
 {

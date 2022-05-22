@@ -7,10 +7,10 @@ import ffmpeg from 'ffmpeg-static';
 import commandExists from 'command-exists';
 import ttf2woff2 from 'ttf2woff2';
 
-import { __client_wwwrootdev_dirname, __client_wwwroot_dirname, __is_Debug } from './globals';
-import { exec, fileExists } from './utilities';
-import { analyseCSS } from './analysers';
-import { testCache } from './caching';
+import { __client_wwwrootdev_dirname, __client_wwwroot_dirname, __is_Debug } from './globals.js';
+import { exec, fileExists } from './utilities.js';
+import { analyseCSS } from './analysers.js';
+import { testCache } from './caching.js';
 
 let hasSASSBundleCompiled = false;
 let hasTSBundleCompiled = false;

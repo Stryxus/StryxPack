@@ -1,4 +1,4 @@
-import { AssetCacheManifest, SettingsManifest } from "./utilities";
+import { AssetCacheManifest, SettingsManifest } from "./utilities.js";
 
 export const settingsManifest: SettingsManifest =
 {
