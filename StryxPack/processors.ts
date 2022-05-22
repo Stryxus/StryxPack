@@ -23,7 +23,7 @@ export function resetCompilationVariables()
 
 export async function runSimpleCopy(itempath: string, identifier: string)
 {
-    if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, identifier))
+    if (await testCache(itempath, identifier))
     {
         try
         {
@@ -43,7 +43,7 @@ export async function runSimpleCopy(itempath: string, identifier: string)
 
 export async function minifyTypescript(itempath: string, bundle: boolean)
 {
-    if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'min.js') && (!hasTSBundleCompiled || !bundle))
+    if (await testCache(itempath, 'min.js') && (!hasTSBundleCompiled || !bundle))
     {
         hasTSBundleCompiled = bundle;
         try
@@ -73,7 +73,7 @@ export async function minifyTypescript(itempath: string, bundle: boolean)
 
 export async function minifySass(itempath: string)
 {
-    if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'min.css') && !hasSASSBundleCompiled)
+    if (await testCache(itempath, 'min.css') && !hasSASSBundleCompiled)
     {
         hasSASSBundleCompiled = true;
         try
@@ -104,7 +104,7 @@ export async function minifySass(itempath: string)
 
 export async function convertTTFtoWOFF2(itempath: string)
 {
-    if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'woff2'))
+    if (await testCache(itempath, 'woff2'))
     {
         try 
         {
@@ -124,7 +124,7 @@ export async function convertTTFtoWOFF2(itempath: string)
 
 export async function transcodePNGToAVIF(itempath: string)
 {
-    if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'avif'))
+    if (await testCache(itempath, 'avif'))
     {
         try 
         {
@@ -148,7 +148,7 @@ export async function transcodePNGToAVIF(itempath: string)
 
 export async function transcodeH264ToAV1(itempath: string)
 {
-    if (await testCache(__client_wwwroot_dirname, __client_wwwrootdev_dirname, itempath, 'mp4'))
+    if (await testCache(itempath, 'mp4'))
     {
         const output = itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname);
         try
