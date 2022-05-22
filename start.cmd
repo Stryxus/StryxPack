@@ -1,0 +1,1 @@
+node StryxPack/bootstrapper.js

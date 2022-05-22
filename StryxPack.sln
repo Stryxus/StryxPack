@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C54C44E6-EE5F-4BB3-8189-14DCCCDD7904}"
 	ProjectSection(SolutionItems) = preProject
 		setup.ps1 = setup.ps1
+		start.cmd = start.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{B495C2B8-8619-4E01-8222-3BB89CCEA9C6}"
