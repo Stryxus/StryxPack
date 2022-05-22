@@ -160,12 +160,12 @@ export async function transcodeH264ToAV1(itempath: string)
                 if (!err && exists)
                 {
                     await exec('start cmd /C ffmpeg -y -i ' + itempath + (__is_Debug ? ' -c:v librav1e -rav1e-params speed=10:low_latency=true' : ' -c:v librav1e -b:v 200K -rav1e-params speed=0:low_latency=true') +
-                        ' -movflags +faststart -c:a libfdk_aac -b:a 320k ' + output);
+                        ' -movflags +faststart -c:a libfdk_aac -profile:a aac_he_v2 -b:a 128k ' + output);
                 }
                 else
                 {
                     console.error('No non-GPL compliant FFmpeg build detected in enviroment variables - falling back to libaom, video transcoding will take substantially longer and will be much lower quality!');
-                    await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-crf 52' : '-crf 30 -b:v 200k') + ' -movflags +faststart -c:a libfdk_aac -b:a 320k ' + output);
+                    await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-crf 52' : '-crf 30 -b:v 200k') + ' -movflags +faststart -c:a libfdk_aac -profile:a aac_he_v2 -b:a 128k ' + output);
                 }
             });
         }
