@@ -79,7 +79,7 @@ async function processing(__client_wwwroot_dirname: string, __client_wwwrootdev_
     process.stdout.write(String.fromCharCode(27) + `]0;${__project_name} Bundler` + String.fromCharCode(7));
 
     await processing(__client_wwwroot_dirname, __client_wwwrootdev_dirname);
-    await createManifest(__client_wwwroot_dirname);
+    //await createManifest(__client_wwwroot_dirname);
 
     if (__is_Debug)
     {
@@ -92,7 +92,7 @@ async function processing(__client_wwwroot_dirname: string, __client_wwwrootdev_
                 console.clear();
                 console.log(__project_introduction);
                 await processing(__client_wwwroot_dirname, __client_wwwrootdev_dirname);
-                await createManifest(__client_wwwroot_dirname);
+                //await createManifest(__client_wwwroot_dirname);
             }
         });
     }

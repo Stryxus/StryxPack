@@ -1,10 +1,9 @@
 import { join } from 'path';
-import { readFile, stat, truncate, writeFile } from 'fs/promises';
-import crypto from 'crypto';
+import { stat } from 'fs/promises';
 
-import { AssetCache, fileExists, findFiles, literalCast, __client_dirname, __dirname, __project_dirname } from './utilities';
+import { fileExists, __client_dirname, __dirname, __project_dirname } from './utilities';
 import { cachedManifest } from './manifests';
-import { limit, setHasUpdateQueued } from './globals';
+import { setHasUpdateQueued } from './globals';
 
 export async function testCache(__client_wwwroot_dirname: string, __client_wwwrootdev_dirname: string, itempath: string, outExt: string)
 {
@@ -28,6 +27,7 @@ export async function testCache(__client_wwwroot_dirname: string, __client_wwwro
     return shouldCache;
 }
 
+/*
 export async function createManifest(__client_wwwroot_dirname: string)
 {
     await Promise.all((await findFiles(__client_wwwroot_dirname)).filter(item => !item.name.includes('arasaki-os-caches-manifest.json')).map(item => limit(async () =>
@@ -48,3 +48,4 @@ export async function createManifest(__client_wwwroot_dirname: string)
     if (await fileExists(cachesManifestFile)) await truncate(cachesManifestFile, 0);
     await writeFile(cachesManifestFile, JSON.stringify(cachedManifest, null, '\t'));
 }
+*/
