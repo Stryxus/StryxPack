@@ -1,6 +1,6 @@
 import { join } from "path";
 
-import pLimit from 'p-limit';
+const { default: pLimit } = await import('p-limit');
 
 export const limit = pLimit(1);
 
