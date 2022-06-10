@@ -82,7 +82,6 @@ async function processing()
     process.stdout.write(String.fromCharCode(27) + `]0;${__project_name} Bundler` + String.fromCharCode(7));
 
     await processing();
-    //await createManifest(__client_wwwroot_dirname);
 
     if (__is_Debug)
     {
@@ -95,7 +94,6 @@ async function processing()
                 console.clear();
                 console.log(__project_introduction);
                 await processing();
-                //await createManifest(__client_wwwroot_dirname);
             }
         });
     }

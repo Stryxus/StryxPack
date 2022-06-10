@@ -32,26 +32,3 @@ export async function testCache(itempath: string, outExt: string)
     }
     return shouldCache;
 }
-
-/*
-export async function createManifest(__client_wwwroot_dirname: string)
-{
-    await Promise.all((await findFiles(__client_wwwroot_dirname)).filter(item => !item.name.includes('arasaki-os-caches-manifest.json')).map(item => limit(async () =>
-    {
-        const data = await readFile(item.path).then(data => data);
-        if (data) 
-        {
-            const sha = crypto.createHash('sha256');
-            sha.setEncoding('hex');
-            sha.write(data);
-            sha.end();
-            cachedManifest.manifest.push(literalCast<AssetCache>({
-                path: String(item.name), hash: sha.read()
-            }));
-        }
-    })));
-    const cachesManifestFile = join(__client_wwwroot_dirname, 'arasaki-os-caches-manifest.json');
-    if (await fileExists(cachesManifestFile)) await truncate(cachesManifestFile, 0);
-    await writeFile(cachesManifestFile, JSON.stringify(cachedManifest, null, '\t'));
-}
-*/
