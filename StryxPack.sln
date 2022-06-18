@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{B495C2B8-861
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StryxPackTesting", "StryxPackTesting\StryxPackTesting.csproj", "{5FA06666-312F-48EB-AEF4-E7F76708F998}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{800588DC-8B8F-4B0B-A233-FD8C66EBCF58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FA06666-312F-48EB-AEF4-E7F76708F998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FA06666-312F-48EB-AEF4-E7F76708F998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FA06666-312F-48EB-AEF4-E7F76708F998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FA06666-312F-48EB-AEF4-E7F76708F998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
