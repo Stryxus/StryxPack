@@ -35,7 +35,7 @@ export async function analyseCSS(outputCss: string)
         if (item.name === '_Imports.razor' || item.path.includes(`${sep}bin${sep}`) ||
             item.path.includes(`${sep}obj${sep}`) || item.path.includes(`${sep}node_modules${sep}`) ||
             item.path.includes(`${sep}wwwroot-dev${sep}`)) return;
-        const fileLines = (await readFile(item.path, 'utf-8').then(data => data).catch(err => { throw err; })).split(/\r?\n/);
+        const fileLines = (await readFile(item.path, 'utf-8').then(data => data)).split(/\r?\n/);
         if (fileLines)
         {
             fileLines.map(l =>

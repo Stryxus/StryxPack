@@ -1,15 +1,10 @@
 import { constants } from 'fs';
 import { access, readdir } from 'fs/promises';
-import { join, resolve, sep } from 'path';
+import { join, sep } from 'path';
 import cp, { ExecException } from 'child_process';
-
-export const __dirname = resolve();
 
 // Object Literal Interfaces
 export interface FileInfo { path: string; name: string }
-export interface SettingsManifest { version: number }
-export interface AssetCache { path: string; hash: number }
-export interface AssetCacheManifest { manifest: Array<AssetCache> }
 
 export function literalCast<T>(value: T): T { return value; }
 
@@ -33,8 +28,15 @@ export function exec(cmd: string)
 
 export async function fileExists(path: string): Promise<boolean>
 {
-    await access(path, constants.R_OK | constants.W_OK).then(() => { return true; }).catch(() => { return false; });
-    return false;
+    try
+    {
+        await access(path, constants.F_OK | constants.W_OK | constants.R_OK);
+        return true;
+    }
+    catch
+    {
+        return false;
+    }
 }
 
 export async function findFiles(path: string): Promise<Array<FileInfo>>

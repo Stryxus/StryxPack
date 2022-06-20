@@ -9,7 +9,8 @@ export const __project_name = 'StryxPack';
 export const __project_introduction = __project_name + ' By Connor \'Stryxus\' Shearer.\n';
 
 // Directories
-export const __project_dirname = join(dirname(fileURLToPath(import.meta.url)), '../', '../');
+export let __dirname: string;
+export let __project_dirname: string;
 export let __client_dirname: string;
 export let __server_dirname: string;
 
@@ -17,7 +18,7 @@ export let __client_wwwroot_dirname: string;
 export let __client_wwwrootdev_dirname: string;
 
 // Files
-export const __cache_filename = join(__project_dirname, __project_name.toLocaleLowerCase() + '-cache.json');
+export let __cache_filename: string;
 
 // Special Strings
 export const __special_characters_regex = /[ `!@#$%^&*()_+=[\]{};':"\\|,.<>/?~]/;
@@ -30,6 +31,9 @@ export let __has_Update_Queued = false;
 export function setDebugMode() { __is_Debug = true; }
 export function setProjectPaths(relativeClientDirPath: string, relativeServerDirPath: string)
 {
+    __dirname = dirname(fileURLToPath(import.meta.url));
+    __project_dirname = join(__dirname, '../');
+    __cache_filename = join(__project_dirname, __project_name.toLocaleLowerCase() + '-cache.json');
     __client_dirname = join(__project_dirname, relativeClientDirPath);
     __server_dirname = join(__project_dirname, relativeServerDirPath);
     __client_wwwroot_dirname = join(__client_dirname, 'wwwroot');

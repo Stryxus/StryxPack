@@ -351,3 +351,4 @@ MigrationBackup/
 
 *.js
 *.js.map
+stryxpack-cache.json

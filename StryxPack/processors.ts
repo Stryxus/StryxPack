@@ -7,7 +7,7 @@ import ffmpeg from 'ffmpeg-static';
 import commandExists from 'command-exists';
 import ttf2woff2 from 'ttf2woff2';
 
-import { __client_wwwrootdev_dirname, __client_wwwroot_dirname, __is_Debug } from './globals.js';
+import { __client_wwwrootdev_dirname, __client_wwwroot_dirname, __dirname, __is_Debug, __project_dirname } from './globals.js';
 import { exec, fileExists } from './utilities.js';
 import { analyseCSS } from './analysers.js';
 import { testCache } from './caching.js';
@@ -28,9 +28,9 @@ export async function runSimpleCopy(itempath: string, identifier: string)
         try
         {
             const output = itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname);
-            console.log('  | Copying:              [' + identifier.toUpperCase() + `] ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
-            await mkdir(dirname(output), { recursive: true }).catch(err => { throw err; });
-            await copyFile(itempath, output).catch(err => { throw err; });
+            console.log(`  | Copying:              ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
+            await mkdir(dirname(output), { recursive: true });
+            await copyFile(itempath, output);
         }
         catch (e)
         {
@@ -45,22 +45,21 @@ export async function minifyTypescript(itempath: string, bundle: boolean)
 {
     if (await testCache(itempath, 'min.js') && (!hasTSBundleCompiled || !bundle))
     {
-        hasTSBundleCompiled = bundle;
         try
         {
+            const requireFilePath = join(__dirname, 'node_modules', 'requirejs', 'require.js');
             const output = bundle ? join(__client_wwwroot_dirname, 'bundle.min.js') : itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname).replace('.ts', '.js');
             console.log('  | Minifying Typescript: ' + (bundle ? `${sep}wwwroot${sep}bundle.min.js - ${sep}wwwroot${sep}bundle.js.map` : `${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') +
                 ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, '')));
-            await exec('npx tsc ' + (bundle ? join(__client_wwwrootdev_dirname, 'ts', 'bundle.ts') + ' --outFile "' + output + '"' : itempath + ' --outDir ' + __client_wwwroot_dirname) +
+            await exec('npx tsc ' + (bundle ? join(__client_wwwrootdev_dirname, 'ts', 'bundle.ts') + ' --outFile "' + output + '"' : join(__client_wwwrootdev_dirname, 'ts', 'bundle.ts') + ' --outDir ' + __client_wwwroot_dirname) +
                 ' --target ES2021 --lib DOM,ES2021' + (bundle ? ' --module amd' : ',WebWorker') +
                 ' --forceConsistentCasingInFileNames --strict --skipLibCheck --noImplicitAny --importsNotUsedAsValues preserve');
-            const result = await minify((bundle ? await readFile(join(__client_wwwrootdev_dirname, 'node_modules', 'requirejs', 'require.js'), 'utf-8') : '') +
-                await readFile(output, 'utf-8'), { sourceMap: __is_Debug, module: false, mangle: false, ecma: 2020 as ECMA, compress: !__is_Debug });
-            await truncate(output, 0).catch(err => { throw err; });
+            const result = await minify((bundle ? await readFile(requireFilePath, 'utf-8') : '') + await readFile(output, 'utf-8'), { sourceMap: __is_Debug, module: false, mangle: false, ecma: 2020 as ECMA, compress: !__is_Debug });
+            await truncate(output, 0);
             const mapFilename = output.replace('.js', '.js.map');
-            if (__is_Debug && await fileExists(mapFilename)) await truncate(mapFilename, 0).catch(err => { throw err; });
-            await writeFile(output, result.code as string).catch(err => { throw err; });
-            if (__is_Debug) await writeFile(mapFilename, result.map as string).catch(err => { throw err; });
+            if (__is_Debug && await fileExists(mapFilename)) await truncate(mapFilename, 0);
+            await writeFile(output, result.code as string);
+            if (__is_Debug) await writeFile(mapFilename, result.map as string);
         }
         catch (e)
         {
@@ -68,6 +67,7 @@ export async function minifyTypescript(itempath: string, bundle: boolean)
             console.error(`  | Typescript Minification Error: ${e}`);
             console.error('  | ------------------------------------------------------------------------------------------------');
         }
+        hasTSBundleCompiled = true;
     }
 }
 
@@ -75,18 +75,25 @@ export async function minifySass(itempath: string)
 {
     if (await testCache(itempath, 'min.css') && !hasSASSBundleCompiled)
     {
-        hasSASSBundleCompiled = true;
         try
         {
+            // TODO: Get this to push the errors to the main command line
             commandExists('dart', async (err, exists) =>
             {
                 if (!err && exists)
                 {
                     console.log(`  | Minifying SASS:       ${sep}wwwroot${sep}bundle.min.css - ${sep}wwwroot${sep}bundle.css.map`);
+                    await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${join(__client_wwwroot_dirname, 'bundle.min.css')}`);
                     const output = join(__client_wwwroot_dirname, 'bundle.min.css');
-                    await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${output}`);
+                    const minified = await analyseCSS(await readFile(output, 'utf-8'));
+                    await truncate(output, 0);
+                    await writeFile(output, minified);
                 }
-                else throw 'Dart is not installed or command path index has not been updated if you did install it!';
+                else
+                {
+                    console.error('Dart is not installed or command path index has not been updated if you did install it!');
+                    throw 'Dart is not installed or command path index has not been updated if you did install it!';
+                }
             });
         }
         catch (e)
@@ -95,10 +102,7 @@ export async function minifySass(itempath: string)
             console.error(`  | SASS Minification Error: ${e}`);
             console.error('  | ------------------------------------------------------------------------------------------------');
         }
-        const output = join(__client_wwwroot_dirname, 'bundle.min.css');
-        const minified = await analyseCSS(await readFile(output, 'utf-8'));
-        await truncate(output, 0);
-        await writeFile(output, minified);
+        hasSASSBundleCompiled = true;
     }
 }
 
@@ -159,7 +163,7 @@ export async function transcodeH264ToAV1(itempath: string)
             {
                 if (!err && exists)
                 {
-                    await exec('start cmd /C ffmpeg -y -i ' + itempath + (__is_Debug ? ' -c:v librav1e -rav1e-params speed=10:low_latency=true' : ' -c:v librav1e -b:v 200K -rav1e-params speed=0:low_latency=true') +
+                    await exec('start cmd /K ffmpeg -y -i ' + itempath + (__is_Debug ? ' -c:v librav1e -rav1e-params speed=10:low_latency=true' : ' -c:v librav1e -b:v 200K -rav1e-params speed=0:low_latency=true') +
                         ' -movflags +faststart -c:a libfdk_aac -profile:a aac_he_v2 -b:a 128k ' + output);
                 }
                 else

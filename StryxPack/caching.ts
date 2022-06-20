@@ -2,7 +2,7 @@ import { join } from 'path';
 import { readFile } from 'fs/promises';
 import crypto from 'crypto';
 
-import { fileExists, __dirname } from './utilities.js';
+import { fileExists } from './utilities.js';
 import { cachedManifest } from './manifests.js';
 import { setHasUpdateQueued, __client_wwwrootdev_dirname, __client_wwwroot_dirname } from './globals.js';
 

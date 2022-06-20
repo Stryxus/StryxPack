@@ -9,4 +9,5 @@ You will need to install the [Dark SDK](https://dart.dev/) and, therefore [Choco
 ### Installation
 1. Open Windows Terminal and make sure you are in a PowerShell tab with it pointing to the same directory as the setup.ps1.
 2. Run `Set-ExecutionPolicy Bypass -Scope Process` then `.\setup.ps1`.
-3. Done! Simple right?
+3. Go into the project it self (where pubspec.yaml is) and open a terminal there. Finally run 'dart pub get' to resolve the dependencies.
+4. Done! Simple right?
