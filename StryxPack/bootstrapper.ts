@@ -61,13 +61,13 @@ async function processing(path: string | undefined)
         else if (path.endsWith('.mp4')) limit(async () => await transcodeH264ToAV1(path));
         else if (path.endsWith('.mp3')) limit(async () => await transcodeMP3ToAAC(path));
     }
-    if (!__has_Update_Queued) console.log('  | No files have changed!');
+    if (!__has_Update_Queued) console.log('   | No files have changed!');
     console.log(' /');
     if (await fileExists(__cache_filename)) await truncate(__cache_filename, 0).catch(err => console.error(err));
     await writeFile(__cache_filename, JSON.stringify(cachedManifest, null, '\t')).catch(err => console.error(err));
     const inputSize: number = await gFS.loose(__client_wwwrootdev_dirname);
     const outputSize: number = await gFS.loose(__client_wwwroot_dirname);
-    console.log('| > Size Before: ' + inputSize.toLocaleString('en') + ' bytes  |  Size After:  ' + outputSize.toLocaleString('en') + ' bytes  |  Efficiency: ' + (100 - (outputSize / inputSize * 100)).toFixed(4).toString() + '%');
+    console.log('| > Size Before: ' + inputSize.toLocaleString('en') + ' bytes  |  Size After: ' + outputSize.toLocaleString('en') + ' bytes  |  Efficiency: ' + (100 - (outputSize / inputSize * 100)).toFixed(4).toString() + '%');
 }
 
 (async () =>
