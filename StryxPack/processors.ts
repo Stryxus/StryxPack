@@ -4,7 +4,6 @@ import { dirname, join, sep } from 'path';
 import sharp from 'sharp';
 import { ECMA, minify } from 'terser';
 import ffmpeg from 'ffmpeg-static';
-import commandExists from 'command-exists';
 import ttf2woff2 from 'ttf2woff2';
 
 import { __client_wwwrootdev_dirname, __client_wwwroot_dirname, __dirname, __is_Debug, __project_dirname } from './globals.js';
@@ -78,23 +77,12 @@ export async function minifySass(itempath: string)
         try
         {
             // TODO: Get this to push the errors to the main command line
-            commandExists('dart', async (err, exists) =>
-            {
-                if (!err && exists)
-                {
-                    console.log(`  | Minifying SASS:       ${sep}wwwroot${sep}bundle.min.css - ${sep}wwwroot${sep}bundle.css.map`);
-                    await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${join(__client_wwwroot_dirname, 'bundle.min.css')}`);
-                    const output = join(__client_wwwroot_dirname, 'bundle.min.css');
-                    const minified = await analyseCSS(await readFile(output, 'utf-8'));
-                    await truncate(output, 0);
-                    await writeFile(output, minified);
-                }
-                else
-                {
-                    console.error('Dart is not installed or command path index has not been updated if you did install it!');
-                    throw 'Dart is not installed or command path index has not been updated if you did install it!';
-                }
-            });
+            console.log(`  | Minifying SASS:       ${sep}wwwroot${sep}bundle.min.css - ${sep}wwwroot${sep}bundle.css.map`);
+            await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${join(__client_wwwroot_dirname, 'bundle.min.css')}`);
+            const output = join(__client_wwwroot_dirname, 'bundle.min.css');
+            const minified = await analyseCSS(await readFile(output, 'utf-8'));
+            await truncate(output, 0);
+            await writeFile(output, minified);
         }
         catch (e)
         {
@@ -159,19 +147,7 @@ export async function transcodeH264ToAV1(itempath: string)
         {
             console.log(` | Transcoding Video:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
             await mkdir(dirname(output), { recursive: true });
-            commandExists('dart', async (err, exists) =>
-            {
-                if (!err && exists)
-                {
-                    await exec('start cmd /C ffmpeg -y -i ' + itempath + (__is_Debug ? ' -c:v librav1e -rav1e-params speed=10:low_latency=true' : ' -c:v librav1e -b:v 200K -rav1e-params speed=0:low_latency=true') +
-                        ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
-                }
-                else
-                {
-                    console.error('No non-GPL compliant FFmpeg build detected in enviroment variables - Falling back to libaom, video transcoding will take substantially longer and will be much lower quality!');
-                    await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-crf 52' : '-crf 30 -b:v 200k') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
-                }
-            });
+            await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-crf 52' : '-crf 30 -b:v 200k') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
         }
         catch (e)
         {
