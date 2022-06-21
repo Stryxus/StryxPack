@@ -147,7 +147,7 @@ export async function transcodeH264ToAV1(itempath: string)
         {
             console.log(`  | Transcoding Video:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
             await mkdir(dirname(output), { recursive: true });
-            await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-crf 52' : '-crf 30 -b:v 200k') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
+            await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-b:v 5M' : '-b:v 1M') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
         }
         catch (e)
         {
