@@ -160,9 +160,9 @@ export async function transcodeH264ToAV1(itempath: string)
 
 export async function transcodeMP3ToAAC(itempath: string)
 {
-    if (await testCache(itempath, 'm4a'))
+    if (await testCache(itempath, 'aac'))
     {
-        const output = itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname).replace('.mp3', '.m4a');
+        const output = itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname).replace('.mp3', '.aac');
         try
         {
             console.log(`  | Transcoding Audio:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
