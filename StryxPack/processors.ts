@@ -3,7 +3,6 @@ import { dirname, join, sep } from 'path';
 
 import sharp from 'sharp';
 import { ECMA, minify } from 'terser';
-import ffmpeg from 'ffmpeg-static';
 import ttf2woff2 from 'ttf2woff2';
 
 import { __client_wwwrootdev_dirname, __client_wwwroot_dirname, __dirname, __is_Debug, __project_dirname } from './globals.js';
@@ -138,6 +137,15 @@ export async function transcodePNGToAVIF(itempath: string)
     }
 }
 
+/*
+ * TODO: Figure out how to automate an FFmpeg build script.
+ * - Must be built in WSL2 Ubuntu.
+ * - Must move ffmpeg.exe from Ubuntu to the same folder as the sln.
+ * - Must add ffmpeg.exe to the .gitignore.
+ * - Must include builds --enable-nonfree --enable-libfdk_aac --enable-libasvav1
+ * - Use -c:a libfdk_aac -profile:a aac_he_v2 -b:a 32k
+ */
+
 export async function transcodeH264ToAV1(itempath: string)
 {
     if (await testCache(itempath, 'mp4'))
@@ -147,7 +155,7 @@ export async function transcodeH264ToAV1(itempath: string)
         {
             console.log(`  | Transcoding Video:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
             await mkdir(dirname(output), { recursive: true });
-            await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-b:v 5M' : '-b:v 1M') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
+            await exec('start cmd /C ffmpeg -y -i ' + itempath + ' -c:v libsvtav1 -svtav1-params fast-decode=1 ' + (__is_Debug ? '-preset 6 -crf 52' : '-preset 0 -crf 52') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
         }
         catch (e)
         {
@@ -167,7 +175,7 @@ export async function transcodeMP3ToAAC(itempath: string)
         {
             console.log(`  | Transcoding Audio:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
             await mkdir(dirname(output), { recursive: true });
-            await exec('start cmd /C ffmpeg -y -i ' + itempath + ' -c:a aac -movflags +faststart -q:a 0 ' + output);
+            await exec('start cmd /C ffmpeg -y -i ' + itempath + ' -movflags +faststart -c:a aac -q:a 0 ' + output);
         }
         catch (e)
         {
