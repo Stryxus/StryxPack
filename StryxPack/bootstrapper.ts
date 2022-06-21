@@ -7,7 +7,7 @@ import getFolderSize from 'get-folder-size';
 let gFS: any = getFolderSize;
 //
 
-import { convertTTFtoWOFF2, minifySass, minifyTypescript, resetCompilationVariables, runSimpleCopy, transcodeH264ToAV1, transcodePNGToAVIF } from './processors.js';
+import { convertTTFtoWOFF2, minifySass, minifyTypescript, resetCompilationVariables, runSimpleCopy, transcodeH264ToAV1, transcodeMP3ToAAC, transcodePNGToAVIF } from './processors.js';
 import { fileExists, FileInfo, filterFiles, findFiles } from './utilities.js';
 import { limit, setDebugMode, setHasUpdateQueued, setProjectPaths, __cache_filename, __client_wwwrootdev_dirname, __client_wwwroot_dirname, __has_Update_Queued, __is_Debug, __project_dirname, __project_introduction, __project_name } from './globals.js';
 import { cachedManifest, setCachedManifest } from './manifests.js';
@@ -30,6 +30,7 @@ async function processing(path: string | undefined)
         const pngFiles = filterFiles(files, 'png').filter(file => file.name !== 'pwa-192.png' && file.name !== 'pwa-512.png');
         const pwapngFiles = filterFiles(files, 'png').filter(file => file.name === 'pwa-192.png' || file.name === 'pwa-512.png');
         const mp4Files = filterFiles(files, 'mp4');
+        const mp3Files = filterFiles(files, 'mp3');
 
         await Promise.all(tsFiles.map(item => limit(async () => await minifyTypescript(item.path, true))));
         await Promise.all(swtsFiles.map(item => limit(async () => await minifyTypescript(item.path, false))));
@@ -42,6 +43,7 @@ async function processing(path: string | undefined)
         await Promise.all(pngFiles.map(item => limit(async () => await transcodePNGToAVIF(item.path))));
         await Promise.all(pwapngFiles.map(item => limit(async () => await runSimpleCopy(item.path, 'png'))));
         await Promise.all(mp4Files.map(item => limit(async () => await transcodeH264ToAV1(item.path))));
+        await Promise.all(mp3Files.map(item => limit(async () => await transcodeMP3ToAAC(item.path))));
     }
     else
     {
@@ -57,6 +59,7 @@ async function processing(path: string | undefined)
         else if (path.endsWith('.png') || path.endsWith('.jpg') && !path.endsWith('pwa-192.png') && path.endsWith('pwa-512.png')) limit(async () => await transcodePNGToAVIF(path));
         else if (path.endsWith('.png') && (path.endsWith('pwa-192.png') || path.endsWith('pwa-512.png'))) limit(async () => await runSimpleCopy(path, 'png'));
         else if (path.endsWith('.mp4')) limit(async () => await transcodeH264ToAV1(path));
+        else if (path.endsWith('.mp3')) limit(async () => await transcodeMP3ToAAC(path));
     }
     if (!__has_Update_Queued) console.log('  | No files have changed!');
     console.log(' /');

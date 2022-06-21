@@ -163,15 +163,35 @@ export async function transcodeH264ToAV1(itempath: string)
             {
                 if (!err && exists)
                 {
-                    await exec('start cmd /K ffmpeg -y -i ' + itempath + (__is_Debug ? ' -c:v librav1e -rav1e-params speed=10:low_latency=true' : ' -c:v librav1e -b:v 200K -rav1e-params speed=0:low_latency=true') +
-                        ' -movflags +faststart -c:a libfdk_aac -profile:a aac_he_v2 -b:a 128k ' + output);
+                    await exec('start cmd /C ffmpeg -y -i ' + itempath + (__is_Debug ? ' -c:v librav1e -rav1e-params speed=10:low_latency=true' : ' -c:v librav1e -b:v 200K -rav1e-params speed=0:low_latency=true') +
+                        ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
                 }
                 else
                 {
-                    console.error('No non-GPL compliant FFmpeg build detected in enviroment variables - falling back to libaom, video transcoding will take substantially longer and will be much lower quality!');
-                    await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-crf 52' : '-crf 30 -b:v 200k') + ' -movflags +faststart -c:a libfdk_aac -profile:a aac_he_v2 -b:a 128k ' + output);
+                    console.error('No non-GPL compliant FFmpeg build detected in enviroment variables - Falling back to libaom, video transcoding will take substantially longer and will be much lower quality!');
+                    await exec('start cmd /C ' + ffmpeg + ' -y -i ' + itempath + ' -c:v libaom-av1 ' + (__is_Debug ? '-crf 52' : '-crf 30 -b:v 200k') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
                 }
             });
+        }
+        catch (e)
+        {
+            console.error('  | ------------------------------------------------------------------------------------------------');
+            console.error(`  | FFMPEG Transcoding Error: ${e}`);
+            console.error('  | ------------------------------------------------------------------------------------------------');
+        }
+    }
+}
+
+export async function transcodeMP3ToAAC(itempath: string)
+{
+    if (await testCache(itempath, 'aac'))
+    {
+        const output = itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname).replace('.mp3', '.aac');
+        try
+        {
+            console.log(` | Transcoding Video:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
+            await mkdir(dirname(output), { recursive: true });
+            await exec('start cmd /C ffmpeg -y -i ' + itempath + ' -c:a aac -movflags +faststart -q:a 0 ' + output);
         }
         catch (e)
         {
