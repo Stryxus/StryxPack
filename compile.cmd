@@ -1,1 +1,1 @@
-tsc bootstrapper.ts
+tsc StryxPack/bootstrapper.ts
