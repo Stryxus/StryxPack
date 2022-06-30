@@ -1,1 +1,1 @@
-tsc bootstrapper.js
+tsc bootstrapper.ts
