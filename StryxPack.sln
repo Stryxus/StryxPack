@@ -7,6 +7,7 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "StryxPack", "StryxPack\Stry
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C54C44E6-EE5F-4BB3-8189-14DCCCDD7904}"
 	ProjectSection(SolutionItems) = preProject
+		compile.cmd = compile.cmd
 		setup.ps1 = setup.ps1
 		start.cmd = start.cmd
 	EndProjectSection
@@ -20,9 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{B495C2B8-861
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{43A16FA0-9AE6-492C-82E9-2AD096D1DB8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StryxPackTesting.Server", "StryxPackTesting\Server\StryxPackTesting.Server.csproj", "{F3D53E62-3B26-461E-8E7B-61B6B1723089}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StryxPackTesting.Server", "StryxPackTesting\Server\StryxPackTesting.Server.csproj", "{F3D53E62-3B26-461E-8E7B-61B6B1723089}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StryxPackTesting.Client", "StryxPackTesting\Client\StryxPackTesting.Client.csproj", "{795C755E-1A5B-40CC-B484-200818F878E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StryxPackTesting.Client", "StryxPackTesting\Client\StryxPackTesting.Client.csproj", "{795C755E-1A5B-40CC-B484-200818F878E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
