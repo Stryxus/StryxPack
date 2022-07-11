@@ -79,9 +79,13 @@ export async function minifySass(itempath: string)
             console.log(`  | Minifying SASS:       ${sep}wwwroot${sep}bundle.min.css - ${sep}wwwroot${sep}bundle.css.map`);
             const output = join(__client_wwwroot_dirname, 'bundle.min.css');
             await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${output}`);
-            const minified = await analyseCSS(await readFile(output, 'utf-8'));
-            await truncate(output, 0);
-            await writeFile(output, minified);
+            if (await fileExists(output))
+            {
+                const minified = await analyseCSS(await readFile(output, 'utf-8'));
+                await truncate(output, 0);
+                await writeFile(output, minified);
+            }
+            else throw `Dart SASS failed to write ${output}`;
         }
         catch (e)
         {
