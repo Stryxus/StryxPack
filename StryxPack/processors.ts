@@ -77,8 +77,8 @@ export async function minifySass(itempath: string)
         {
             // TODO: Get this to push the errors to the main command line
             console.log(`  | Minifying SASS:       ${sep}wwwroot${sep}bundle.min.css - ${sep}wwwroot${sep}bundle.css.map`);
-            await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${join(__client_wwwroot_dirname, 'bundle.min.css')}`);
             const output = join(__client_wwwroot_dirname, 'bundle.min.css');
+            await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${output}`);
             const minified = await analyseCSS(await readFile(output, 'utf-8'));
             await truncate(output, 0);
             await writeFile(output, minified);
