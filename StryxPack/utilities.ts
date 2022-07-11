@@ -14,12 +14,11 @@ export function exec(cmd: string)
 {
     return new Promise((done, failed) =>
     {
-        cp.exec(cmd, { ...{ log: false, cwd: process.cwd() } }, (err: ExecException | null) =>
+        cp.exec(cmd, { ...{ log: true, cwd: process.cwd() } }, (err: ExecException | null) =>
         {
             if (err)
             {
                 failed(err);
-                return;
             }
             done(err);
         })

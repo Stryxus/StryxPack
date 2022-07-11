@@ -75,10 +75,9 @@ export async function minifySass(itempath: string)
     {
         try
         {
-            // TODO: Get this to push the errors to the main command line
             console.log(`  | Minifying SASS:       ${sep}wwwroot${sep}bundle.min.css - ${sep}wwwroot${sep}bundle.css.map`);
             const output = join(__client_wwwroot_dirname, 'bundle.min.css');
-            await exec(`start /min cmd /C dart sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${output}`);
+            await exec(`dart ${__dirname}/sass-minify.dart ${join(__client_wwwrootdev_dirname, 'sass', 'bundle.sass')} ${output}`);
             if (await fileExists(output))
             {
                 const minified = await analyseCSS(await readFile(output, 'utf-8'));
@@ -159,7 +158,7 @@ export async function transcodeH264ToAV1(itempath: string)
         {
             console.log(`  | Transcoding Video:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
             await mkdir(dirname(output), { recursive: true });
-            await exec('start cmd /C ffmpeg -y -i ' + itempath + ' -c:v libsvtav1 -svtav1-params fast-decode=1 ' + (__is_Debug ? '-preset 6 -crf 52' : '-preset 0 -crf 52') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
+            await exec('ffmpeg -y -i ' + itempath + ' -c:v libsvtav1 -svtav1-params fast-decode=1 ' + (__is_Debug ? '-preset 6 -crf 52' : '-preset 0 -crf 52') + ' -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ' + output);
         }
         catch (e)
         {
@@ -179,7 +178,7 @@ export async function transcodeMP3ToAAC(itempath: string)
         {
             console.log(`  | Transcoding Audio:    ${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') + ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ''));
             await mkdir(dirname(output), { recursive: true });
-            await exec('start cmd /C ffmpeg -y -i ' + itempath + ' -movflags +faststart -c:a aac -q:a 0 ' + output);
+            await exec('ffmpeg -y -i ' + itempath + ' -movflags +faststart -c:a aac -q:a 0 ' + output);
         }
         catch (e)
         {
