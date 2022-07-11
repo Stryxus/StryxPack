@@ -70,7 +70,7 @@ async function processing(path: string | undefined)
     await writeFile(__cache_filename, JSON.stringify(cachedManifest, null, '\t')).catch(err => console.error(err));
     const inputSize: number = await gFS.loose(__client_wwwrootdev_dirname);
     const outputSize: number = await gFS.loose(__client_wwwroot_dirname);
-    console.log('| > Size Before: ' + inputSize.toLocaleString('en') + ' bytes  |  Size After: ' + outputSize.toLocaleString('en') + ' bytes  |  Efficiency: ' + (100 - (outputSize / inputSize * 100)).toFixed(4).toString() + '%');
+    console.log('  | > Size Before: ' + inputSize.toLocaleString('en') + ' bytes  |  Size After: ' + outputSize.toLocaleString('en') + ' bytes  |  Efficiency: ' + (100 - (outputSize / inputSize * 100)).toFixed(4).toString() + '%');
 }
 
 (async () =>
