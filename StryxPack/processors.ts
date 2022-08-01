@@ -45,14 +45,13 @@ export async function minifyTypescript(itempath: string, bundle: boolean)
     {
         try
         {
-            const requireFilePath = join(__dirname, 'node_modules', 'requirejs', 'require.js');
             const output = bundle ? join(__client_wwwroot_dirname, 'bundle.min.js') : itempath.replace(__client_wwwrootdev_dirname, __client_wwwroot_dirname).replace('.ts', '.js');
             console.log('  | Minifying Typescript: ' + (bundle ? `${sep}wwwroot${sep}bundle.min.js - ${sep}wwwroot${sep}bundle.js.map` : `${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') +
                 ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, '')));
             await exec('npx tsc ' + (bundle ? join(__client_wwwrootdev_dirname, 'ts', 'bundle.ts') + ' --outFile "' + output + '"' : join(__client_wwwrootdev_dirname, 'ts', 'bundle.ts') + ' --outDir ' + __client_wwwroot_dirname) +
                 ' --target ES2021 --lib DOM,ES2021' + (bundle ? ' --module amd' : ',WebWorker') +
                 ' --forceConsistentCasingInFileNames --strict --skipLibCheck --noImplicitAny --importsNotUsedAsValues preserve');
-            const result = await minify((bundle ? await readFile(requireFilePath, 'utf-8') : '') + await readFile(output, 'utf-8'), { sourceMap: __is_Debug, module: false, mangle: false, ecma: 2020 as ECMA, compress: !__is_Debug });
+            const result = await minify(await readFile(output, 'utf-8'), { sourceMap: __is_Debug, module: false, mangle: false, ecma: 2020 as ECMA, compress: !__is_Debug });
             await truncate(output, 0);
             const mapFilename = output.replace('.js', '.js.map');
             if (__is_Debug && await fileExists(mapFilename)) await truncate(mapFilename, 0);
