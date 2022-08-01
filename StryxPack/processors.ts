@@ -49,7 +49,7 @@ export async function minifyTypescript(itempath: string, bundle: boolean)
             console.log('  | Minifying Typescript: ' + (bundle ? `${sep}wwwroot${sep}bundle.min.js - ${sep}wwwroot${sep}bundle.js.map` : `${sep}wwwroot-dev` + itempath.replace(__client_wwwrootdev_dirname, '') +
                 ` > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, '')));
             await exec('npx tsc ' + (bundle ? join(__client_wwwrootdev_dirname, 'ts', 'bundle.ts') + ' --outFile "' + output + '"' : join(__client_wwwrootdev_dirname, 'ts', 'bundle.ts') + ' --outDir ' + __client_wwwroot_dirname) +
-                ' --target ES2021 --lib DOM,ES2021' + (bundle ? ' --module amd' : ',WebWorker') +
+                ' --target ES2021 --lib DOM,ES2021' + (bundle ? ' --module ES2020' : ',WebWorker') +
                 ' --forceConsistentCasingInFileNames --strict --skipLibCheck --noImplicitAny --importsNotUsedAsValues preserve');
             const result = await minify(await readFile(output, 'utf-8'), { sourceMap: __is_Debug, module: false, mangle: false, ecma: 2020 as ECMA, compress: !__is_Debug });
             await truncate(output, 0);
