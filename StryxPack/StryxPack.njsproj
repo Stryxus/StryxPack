@@ -38,9 +38,6 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="analysers.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="caching.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
