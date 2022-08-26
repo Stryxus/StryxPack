@@ -1,7 +1,7 @@
-import { constants } from 'fs';
-import { access, readdir } from 'fs/promises';
-import { join, sep } from 'path';
-import cp, { ExecException } from 'child_process';
+import { constants } from "fs";
+import { access, readdir } from "fs/promises";
+import { join, sep } from "path";
+import cp, { ExecException } from "child_process";
 
 // Object Literal Interfaces
 export interface FileInfo { path: string; name: string }
@@ -49,7 +49,7 @@ export async function findFiles(path: string): Promise<Array<FileInfo>>
 
 export function filterFiles(files: Array<FileInfo>, ext: string): Array<FileInfo>
 {
-    return Object.values(files).filter(file => String(file.name).split('.').pop() === ext);
+    return Object.values(files).filter(file => String(file.name).split(".").pop() === ext);
 }
 
 export function isUpperCase(str: string): boolean
