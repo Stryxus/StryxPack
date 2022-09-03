@@ -12,8 +12,9 @@ You will need to install the [Dark SDK](https://dart.dev/) and, therefore [Choco
 2. Run `Set-ExecutionPolicy Bypass -Scope Process` then `.\setup_first` to setup [Chocolatey](https://chocolatey.org/).
 3. Close all terminals and everything you think may involve your systems enviroment variables. This will refresh the enviroment variables.
 4. Open another Windows Terminal in administrator and run `.\setup_second` to setup [Dark SDK](https://dart.dev/) and restore the Dart and SASS dependencies.
-4. You will need to download [git master FFmpeg Full](https://ffmpeg.org/download.html) and make sure the ffmpeg command is globally accessible through your terminal.
-5. Done! Simple right.
+5. Finally run `npm i -g typescript
+6. You will need to download [git master FFmpeg Full](https://ffmpeg.org/download.html) and make sure the ffmpeg command is globally accessible through your terminal.
+7. Done! Simple right.
 ## How to use in other repositories
 1. Install typescript globally to use the compile and start scripts. `npm install -g typescript`.
 2. Preferably open the Terminal in Visual Studio and run 'cd StryxPack' then `./compile'.
