@@ -3,7 +3,7 @@ import process from "process";
 
 import chokidar from "chokidar";
 
-import { convertTTFtoWOFF2, minifySass, minifyTypescript, transcodeH264ToAV1, transcodeMP3ToAAC, transcodePNGToAVIF } from "./processors.js";
+import { convertTTFtoWOFF2, transcodeH264ToAV1, transcodeMP3ToAAC, transcodePNGToAVIF } from "./processors.js";
 import { fileExists, FileInfo, filterFiles, findFiles } from "./utilities.js";
 import { limit, setDebugMode, setProjectPaths, __cache_filename, __client_wwwroot_dirname, __is_Debug, __project_dirname, __project_introduction, __project_name } from "./globals.js";
 import { cachedManifest, setCachedManifest } from "./manifests.js";
@@ -13,15 +13,11 @@ async function processing(path: string | undefined)
     if (path === undefined)
     {
         const files: Array<FileInfo> = (await findFiles(__client_wwwroot_dirname)).filter(file => !file.path.includes("node_modules") && !file.path.includes("package.json") && !file.path.includes("package-lock.json"));
-        const tsFiles = filterFiles(files, "ts");
-        const sassFile = filterFiles(files, "sass");
         const ttfFiles = filterFiles(files, "ttf");
         const pngFiles = filterFiles(files, "png").filter(file => file.name !== "pwa-192.png" && file.name !== "pwa-512.png");
         const mp4Files = filterFiles(files, "mp4");
         const mp3Files = filterFiles(files, "mp3");
 
-        await Promise.all(tsFiles.map(item => limit(async () => await minifyTypescript(item.path))));
-        await Promise.all(sassFile.map(item => limit(async () => await minifySass(item.path))));
         await Promise.all(ttfFiles.map(item => limit(async () => await convertTTFtoWOFF2(item.path))));
         await Promise.all(pngFiles.map(item => limit(async () => await transcodePNGToAVIF(item.path))));
         await Promise.all(mp4Files.map(item => limit(async () => await transcodeH264ToAV1(item.path))));
@@ -29,9 +25,7 @@ async function processing(path: string | undefined)
     }
     else
     {
-        if (path.endsWith(".ts")) limit(async () => await minifyTypescript(path));
-        else if (path.endsWith(".sass")) limit(async () => await minifySass(path));
-        else if (path.endsWith(".ttf")) limit(async () => await convertTTFtoWOFF2(path));
+        if (path.endsWith(".ttf")) limit(async () => await convertTTFtoWOFF2(path));
         else if (path.endsWith(".png") || path.endsWith(".jpg")) limit(async () => await transcodePNGToAVIF(path));
         else if (path.endsWith(".mp4")) limit(async () => await transcodeH264ToAV1(path));
         else if (path.endsWith(".mp3")) limit(async () => await transcodeMP3ToAAC(path));

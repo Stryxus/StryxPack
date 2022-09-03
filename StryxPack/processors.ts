@@ -1,74 +1,12 @@
-import { readFile, unlink, writeFile } from "fs/promises";
-import { join, sep } from "path";
+import { readFile, writeFile } from "fs/promises";
+import { sep } from "path";
 
 import sharp from "sharp";
-import { ECMA, minify } from "terser";
 import ttf2woff2 from "ttf2woff2";
 
 import { __client_wwwroot_dirname, __dirname, __is_Debug, __project_dirname } from "./globals.js";
-import { exec, fileExists } from "./utilities.js";
+import { exec } from "./utilities.js";
 import { testCache } from "./caching.js";
-
-export async function minifyTypescript(itempath: string)
-{
-    if (await testCache(itempath, "min.js"))
-    {
-        try
-        {
-            const output = itempath.replace(".ts", ".js");
-            const outputmin = itempath.replace(".ts", ".min.js");
-            const outputminmap = itempath.replace(".ts", "min.js.map");
-            await exec(`tsc ${itempath} --target ES2020 --lib DOM,ES2020,WebWorker --forceConsistentCasingInFileNames --strict --skipLibCheck --noImplicitAny --importsNotUsedAsValues preserve`);
-            if (await fileExists(output))
-            {
-                const result = await minify(await readFile(output, "utf-8"), { sourceMap: __is_Debug, module: false, mangle: false, ecma: 2020 as ECMA, compress: !__is_Debug });
-                if (result)
-                {
-                    if (await fileExists(outputmin)) await unlink(outputmin);
-                    await writeFile(outputmin, result.code as string);
-                    if (__is_Debug && await fileExists(outputminmap)) await unlink(outputminmap);
-                    if (__is_Debug) await writeFile(outputminmap, result.map as string);
-                    console.log(`  | Minified Typescript: ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot${output.replace(__client_wwwroot_dirname, "")}`);
-                }
-                else throw `Terser failed to minify ${output}`;  
-            }
-            else throw `Typescript failed to write ${output}`; 
-        }
-        catch (e)
-        {
-            console.error("  | ------------------------------------------------------------------------------------------------");
-            console.error(`  | Typescript Minification Error: ${e}`);
-            console.error("  | ------------------------------------------------------------------------------------------------");
-        }
-    }
-}
-
-export async function minifySass(itempath: string)
-{
-    if (await testCache(itempath, "min.css"))
-    {
-        try
-        {
-            const output = itempath.replace(".sass", ".css");
-            const outputmin = itempath.replace(".sass", ".min.css");
-            if (await fileExists(output)) await unlink(output);
-            await exec(`dart ${__dirname}/sass-minify.dart ${join(__client_wwwroot_dirname, "bundle.sass")} ${output}`);
-            if (await fileExists(output))
-            {
-                if (await fileExists(outputmin)) await unlink(outputmin);
-                await writeFile(outputmin, await readFile(output, "utf-8"));
-                console.log(`  | Minified SASS:       ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot${output.replace(__client_wwwroot_dirname, "")}`);
-            }
-            else throw `Dart SASS failed to write ${output}`;
-        }
-        catch (e)
-        {
-            console.error("  | ------------------------------------------------------------------------------------------------");
-            console.error(`  | SASS Minification Error: ${e}`);
-            console.error("  | ------------------------------------------------------------------------------------------------");
-        }
-    }
-}
 
 export async function convertTTFtoWOFF2(itempath: string)
 {

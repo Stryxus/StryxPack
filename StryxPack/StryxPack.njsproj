@@ -33,8 +33,6 @@
   <ItemGroup>
     <None Include="bootstrapper.ts" />
     <Content Include="package.json" />
-    <Content Include="pubspec.yaml" />
-    <Content Include="sass-minify.dart" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
