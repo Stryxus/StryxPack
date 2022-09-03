@@ -17,9 +17,8 @@ export async function minifyTypescript(itempath: string)
         {
             const output = itempath.replace(".ts", ".js");
             const outputmin = itempath.replace(".ts", ".min.js");
-            const outputminmap = output.replace(".ts", "min.js.map");
-            console.log(`  | Minifying Typescript: ${sep}wwwroot-dev${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot${output.replace(__client_wwwroot_dirname, "")}`);
-            await exec(`npx tsc ${itempath} --outDir ${__client_wwwroot_dirname} --target ES2020 --lib DOM,ES2020,WebWorker --forceConsistentCasingInFileNames --strict --skipLibCheck --noImplicitAny --importsNotUsedAsValues preserve`);
+            const outputminmap = itempath.replace(".ts", "min.js.map");
+            await exec(`tsc ${itempath} --target ES2020 --lib DOM,ES2020,WebWorker --forceConsistentCasingInFileNames --strict --skipLibCheck --noImplicitAny --importsNotUsedAsValues preserve`);
             if (await fileExists(output))
             {
                 const result = await minify(await readFile(output, "utf-8"), { sourceMap: __is_Debug, module: false, mangle: false, ecma: 2020 as ECMA, compress: !__is_Debug });
@@ -29,6 +28,7 @@ export async function minifyTypescript(itempath: string)
                     await writeFile(outputmin, result.code as string);
                     if (__is_Debug && await fileExists(outputminmap)) await unlink(outputminmap);
                     if (__is_Debug) await writeFile(outputminmap, result.map as string);
+                    console.log(`  | Minified Typescript: ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot${output.replace(__client_wwwroot_dirname, "")}`);
                 }
                 else throw `Terser failed to minify ${output}`;  
             }
@@ -51,13 +51,13 @@ export async function minifySass(itempath: string)
         {
             const output = itempath.replace(".sass", ".css");
             const outputmin = itempath.replace(".sass", ".min.css");
-            console.log(`  | Minifying SASS:       ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot${output.replace(__client_wwwroot_dirname, "") }`);
             if (await fileExists(output)) await unlink(output);
-            await exec(`dart ${__dirname}/sass-minify.dart ${join(__client_wwwroot_dirname, "sass", "bundle.sass")} ${output}`);
+            await exec(`dart ${__dirname}/sass-minify.dart ${join(__client_wwwroot_dirname, "bundle.sass")} ${output}`);
             if (await fileExists(output))
             {
                 if (await fileExists(outputmin)) await unlink(outputmin);
                 await writeFile(outputmin, await readFile(output, "utf-8"));
+                console.log(`  | Minified SASS:       ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot${output.replace(__client_wwwroot_dirname, "")}`);
             }
             else throw `Dart SASS failed to write ${output}`;
         }
@@ -77,8 +77,8 @@ export async function convertTTFtoWOFF2(itempath: string)
         try 
         {
             const output = itempath.replace(".ttf", ".woff2");
-            console.log(`  | Optimising TTF:       ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ""));
             await writeFile(output, ttf2woff2(await readFile(itempath)));
+            console.log(`  | Optimised TTF:       ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ""));
         }
         catch (e)
         {
@@ -96,9 +96,9 @@ export async function transcodePNGToAVIF(itempath: string)
         try 
         {
             const output: string = itempath.replace(".png", ".avif");
-            console.log(`  | Transcoding Image:    ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ""));
             const avif = await sharp(await readFile(itempath)).avif({ quality: __is_Debug ? 90 : 65, effort: __is_Debug ? 2 : 9 }).toBuffer();
             await writeFile(output, avif);
+            console.log(`  | Transcoded Image:    ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")} > ${sep}wwwroot` + output.replace(__client_wwwroot_dirname, ""));
         }
         catch (e)
         {
@@ -125,8 +125,8 @@ export async function transcodeH264ToAV1(itempath: string)
         const output = itempath;
         try
         {
-            console.log(`  | Transcoding Video:    ${sep}wwwroot-dev${itempath.replace(__client_wwwroot_dirname, "") }`);
             await exec(`ffmpeg -y -i ${itempath} -c:v libsvtav1 -svtav1-params fast-decode=1 ${(__is_Debug ? "-preset 6 -crf 52" : "-preset 0 -crf 52")} -movflags +faststart -c:a aac -movflags +faststart -q:a 0 ${output}`);
+            console.log(`  | Transcoded Video:    ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")}`);
         }
         catch (e)
         {
@@ -144,8 +144,8 @@ export async function transcodeMP3ToAAC(itempath: string)
         const output = itempath.replace(".mp3", ".aac");
         try
         {
-            console.log(`  | Transcoding Audio:    ${sep}wwwroot-dev${itempath.replace(__client_wwwroot_dirname, "") }`);
             await exec(`ffmpeg -y -i ${itempath} -movflags +faststart -c:a aac -q:a 0 ${output}`);
+            console.log(`  | Transcoded Audio:    ${sep}wwwroot${itempath.replace(__client_wwwroot_dirname, "")}`);
         }
         catch (e)
         {

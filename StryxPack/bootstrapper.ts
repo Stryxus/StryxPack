@@ -39,7 +39,6 @@ async function processing(path: string | undefined)
         else if (path.endsWith(".mp3")) limit(async () => await transcodeMP3ToAAC(path));
     }
     if (!__has_Update_Queued) console.log("   | No files have changed!");
-    console.log(" /");
     if (await fileExists(__cache_filename)) await truncate(__cache_filename, 0);
     await writeFile(__cache_filename, JSON.stringify(cachedManifest, null, "\t"));
 }
