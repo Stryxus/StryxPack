@@ -23,7 +23,6 @@ export const __special_characters_regex = /[ `!@#$%^&*()_+=[\]{};":"\\|,.<>/?~]/
 
 // Booleans
 export let __is_Debug = false;
-export let __has_Update_Queued = false;
 
 // Setters
 export function setDebugMode() { __is_Debug = true; }
@@ -35,4 +34,3 @@ export function setProjectPaths(relativeClientDirPath: string)
     __client_dirname = join(__project_dirname, relativeClientDirPath);
     __client_wwwroot_dirname = join(__client_dirname, "wwwroot");
 }
-export function setHasUpdateQueued(val: boolean) { __has_Update_Queued = val; }

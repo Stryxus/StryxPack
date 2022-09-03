@@ -5,12 +5,11 @@ import chokidar from "chokidar";
 
 import { convertTTFtoWOFF2, minifySass, minifyTypescript, transcodeH264ToAV1, transcodeMP3ToAAC, transcodePNGToAVIF } from "./processors.js";
 import { fileExists, FileInfo, filterFiles, findFiles } from "./utilities.js";
-import { limit, setDebugMode, setHasUpdateQueued, setProjectPaths, __cache_filename, __client_wwwroot_dirname, __has_Update_Queued, __is_Debug, __project_dirname, __project_introduction, __project_name } from "./globals.js";
+import { limit, setDebugMode, setProjectPaths, __cache_filename, __client_wwwroot_dirname, __is_Debug, __project_dirname, __project_introduction, __project_name } from "./globals.js";
 import { cachedManifest, setCachedManifest } from "./manifests.js";
 
 async function processing(path: string | undefined)
 {
-    setHasUpdateQueued(false);
     if (path === undefined)
     {
         const files: Array<FileInfo> = (await findFiles(__client_wwwroot_dirname)).filter(file => !file.path.includes("node_modules") && !file.path.includes("package.json") && !file.path.includes("package-lock.json"));
@@ -30,7 +29,6 @@ async function processing(path: string | undefined)
     }
     else
     {
-        console.log(" \\");
         if (path.endsWith(".ts")) limit(async () => await minifyTypescript(path));
         else if (path.endsWith(".sass")) limit(async () => await minifySass(path));
         else if (path.endsWith(".ttf")) limit(async () => await convertTTFtoWOFF2(path));
@@ -38,7 +36,6 @@ async function processing(path: string | undefined)
         else if (path.endsWith(".mp4")) limit(async () => await transcodeH264ToAV1(path));
         else if (path.endsWith(".mp3")) limit(async () => await transcodeMP3ToAAC(path));
     }
-    if (!__has_Update_Queued) console.log("   | No files have changed!");
     if (await fileExists(__cache_filename)) await truncate(__cache_filename, 0);
     await writeFile(__cache_filename, JSON.stringify(cachedManifest, null, "\t"));
 }

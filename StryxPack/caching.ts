@@ -3,7 +3,7 @@ import crypto from "crypto";
 
 import { fileExists } from "./utilities.js";
 import { cachedManifest } from "./manifests.js";
-import { setHasUpdateQueued, __client_wwwroot_dirname } from "./globals.js";
+import { __client_wwwroot_dirname } from "./globals.js";
 
 export async function testCache(itempath: string, outExt: string)
 {
@@ -24,7 +24,6 @@ export async function testCache(itempath: string, outExt: string)
     {
         if (cachedManifest.manifest.map(x => x.path).indexOf(itempath) > -1) cachedManifest.manifest.splice(cachedManifest.manifest.map(x => x.path).indexOf(itempath), 1);
         cachedManifest.manifest.push({ path: itempath, hash: hash });
-        setHasUpdateQueued(true);
     }
     return shouldCache;
 }
